@@ -55,13 +55,12 @@ public class Rect {
   }
   
   public boolean intersectTop(Rect other) {
-	  return (
-			  	other.contains(topLeftCorner())
-			  	&& other.contains(topRightCorner())
-			 ) || (
-				contains(other.bottomLeftCorner())
-				&& contains(other.bottomRightCorner())
-			 );
+	  return (other.y < y && (
+		other.contains(topLeftCorner())
+			|| other.contains(topRightCorner())
+			|| contains(other.bottomLeftCorner())
+			|| contains(other.bottomRightCorner())
+		));
   }
 
   public boolean intersectBottom(Rect other) {
@@ -69,13 +68,12 @@ public class Rect {
   }
 
   public boolean intersectLeft(Rect other) {
-	  return (
-			  	other.contains(topLeftCorner())
-			  	&& other.contains(bottomLeftCorner())
-			 ) || (
-				contains(other.topRightCorner())
-				&& contains(other.bottomRightCorner())
-			 );
+	  return (other.x < x && (
+		other.contains(topLeftCorner())
+			|| other.contains(bottomLeftCorner())
+			|| contains(other.topRightCorner())
+			|| contains(other.bottomRightCorner())
+		));
   }
 
   public boolean intersectRight(Rect other) {
