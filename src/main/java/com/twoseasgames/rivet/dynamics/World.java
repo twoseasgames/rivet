@@ -16,6 +16,12 @@ public class World {
 		this.gravity = gravity;
 		this.bodies = new ArrayList<Body>();
 	}
+
+	public Body createBody(Point pos) {
+		Body body = new Body(pos);
+		this.bodies.add(body);
+		return body;
+	}
 	
 	public Body createBody(Point pos, Size hitboxSize, boolean dynamic) {
 		Body body = new Body(pos, hitboxSize, dynamic);

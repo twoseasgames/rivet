@@ -15,27 +15,49 @@ public class Body {
 
 	public interface Listener {
 		
-		public void onCollision(Body other);
+		public boolean onCollideTop(Body other);
+		public boolean onCollideRight(Body other);
+		public boolean onCollideBottom(Body other);
+		public boolean onCollideLeft(Body other);
 		
 	}
 
-	private Rect hitbox;
-	private Size hitboxSize;
+	private Rect hitbox = null;
 	private Point pos;
-	private boolean dynamic;
+	private boolean dynamic = false;
 	private List<Acceleration> accelerations;
+	private Listener listener = null;
 	private Velocity velocity;
 	private int id;
+
+	public Body(Point pos) {
+		id = count;
+		count++;
+		this.pos = pos;
+		this.accelerations = new ArrayList<Acceleration>();
+		this.velocity = new Velocity(0, 0);
+	}
 	
 	public Body(Point pos, Size hitboxSize, boolean dynamic) {
 		id = count;
 		count++;
 		hitbox = new Rect(pos, hitboxSize);
 		this.dynamic = dynamic;
-		this.hitboxSize = hitboxSize;
 		this.pos = pos;
 		this.accelerations = new ArrayList<Acceleration>();
 		this.velocity = new Velocity(0, 0);
+	}
+
+	public void setListener(Listener listener) {
+		this.listener = listener;
+	}
+	
+	public int hashCode() {
+		return id;
+	}
+	
+	public boolean equals(Object other) {
+		return id == other.hashCode();
 	}
 	
 	public void addAcceleration(Acceleration acceleration) {
@@ -47,26 +69,36 @@ public class Body {
 			Acceleration acceleration = Acceleration.sum(accelerations);
 			velocity = acceleration.step(velocity, delta);
 			for (Body body : bodies) {
-				if(body.id != id) {
-					velocity.setY(0);
+				if(body.id != id && body.hitbox != null) {
 					if(hitbox.intersectTop(body.hitbox) && velocity.y() < 0) {
-						velocity.setY(0);
+						if(listener == null || listener.onCollideTop(body)) {
+							velocity.setY(0);
+						}
 						break;
 					} else if(hitbox.intersectBottom(body.hitbox) && velocity.y() > 0) {
-						velocity.setY(0);
+						if(listener == null || listener.onCollideBottom(body)) {
+							velocity.setY(0);
+						}
 						break;
 					} else if(hitbox.intersectLeft(body.hitbox) && velocity.x() < 0) {
-						velocity.setX(0);
+						if(listener == null || listener.onCollideLeft(body)) {
+							velocity.setX(0);
+						}
 						break;
 					} else if(hitbox.intersectRight(body.hitbox) && velocity.x() > 0) {
-						velocity.setX(0);
+						if(listener == null || listener.onCollideRight(body)) {
+							velocity.setX(0);
+						}
 						break;
 					}
 				}
 			}
 		}
 		pos = velocity.step(pos, delta);
-		hitbox = new Rect(pos, hitboxSize);
+		if (hitbox != null) {
+			hitbox.setX(pos.x());
+			hitbox.setY(pos.y());
+		}
 	}
 	
 	public void setXVelocity(int xVelocity) {
