@@ -1,0 +1,5 @@
+<!-- defines our GWT module -->
+<module>
+    <source path="dynamics"/>
+    <source path="common"/>
+</module>

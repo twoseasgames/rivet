@@ -6,7 +6,6 @@ import java.util.List;
 import com.twoseasgames.rivet.common.Acceleration;
 import com.twoseasgames.rivet.common.Point;
 import com.twoseasgames.rivet.common.Rect;
-import com.twoseasgames.rivet.common.Size;
 import com.twoseasgames.rivet.common.Velocity;
 
 public class Body {
@@ -29,6 +28,7 @@ public class Body {
 	private Listener listener = null;
 	private Velocity velocity;
 	private int id;
+	private Rect hitboxSpecs;
 
 	public Body(Point pos) {
 		id = count;
@@ -38,10 +38,16 @@ public class Body {
 		this.velocity = new Velocity(0, 0);
 	}
 	
-	public Body(Point pos, Size hitboxSize, boolean dynamic) {
+	public Body(Point pos, Rect hitbox, boolean dynamic) {
 		id = count;
 		count++;
-		hitbox = new Rect(pos, hitboxSize);
+		hitboxSpecs = hitbox;
+		this.hitbox = new Rect(
+			pos.x() + hitboxSpecs.x(),
+			pos.y() + hitboxSpecs.y(),
+			hitboxSpecs.width(),
+			hitboxSpecs.height()
+		);
 		this.dynamic = dynamic;
 		this.pos = pos;
 		this.accelerations = new ArrayList<Acceleration>();
@@ -96,9 +102,15 @@ public class Body {
 		}
 		pos = velocity.step(pos, delta);
 		if (hitbox != null) {
-			hitbox.setX(pos.x());
-			hitbox.setY(pos.y());
+			hitbox.setX(pos.x() + hitboxSpecs.x());
+			hitbox.setY(pos.y() + hitboxSpecs.y());
 		}
+	}
+
+	public void setHitbox(Rect hitbox) {
+		hitboxSpecs = hitbox;
+		this.hitbox.setWidth(hitbox.width());
+		this.hitbox.setHeight(hitbox.height());
 	}
 	
 	public void setXVelocity(int xVelocity) {
