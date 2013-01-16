@@ -11,7 +11,8 @@ import com.twoseasgames.rivet.common.Velocity;
 public class Body {
 
 	private static int count = 0;
-
+	public static final Object NO_DATA = new Object();
+	
 	public interface Listener {
 		
 		public boolean onCollideTop(Body other);
@@ -29,7 +30,8 @@ public class Body {
 	private Velocity velocity;
 	private int id;
 	private Rect hitboxSpecs;
-
+	private Object userData = NO_DATA;
+	
 	public Body(Point pos) {
 		id = count;
 		count++;
@@ -54,6 +56,18 @@ public class Body {
 		this.velocity = new Velocity(0, 0);
 	}
 
+	public void setUserData(Object userData) {
+		this.userData = userData;
+	}
+
+	public Object userData() {
+		return userData;
+	}
+	
+	public void setPos(Point pos) {
+		this.pos = pos;
+	}
+	
 	public void setListener(Listener listener) {
 		this.listener = listener;
 	}
@@ -80,22 +94,18 @@ public class Body {
 						if(listener == null || listener.onCollideTop(body)) {
 							velocity.setY(0);
 						}
-						break;
 					} else if(hitbox.intersectBottom(body.hitbox) && velocity.y() > 0) {
 						if(listener == null || listener.onCollideBottom(body)) {
 							velocity.setY(0);
 						}
-						break;
 					} else if(hitbox.intersectLeft(body.hitbox) && velocity.x() < 0) {
 						if(listener == null || listener.onCollideLeft(body)) {
 							velocity.setX(0);
 						}
-						break;
 					} else if(hitbox.intersectRight(body.hitbox) && velocity.x() > 0) {
 						if(listener == null || listener.onCollideRight(body)) {
 							velocity.setX(0);
 						}
-						break;
 					}
 				}
 			}

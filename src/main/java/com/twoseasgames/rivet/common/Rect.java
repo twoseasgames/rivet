@@ -40,20 +40,6 @@ public class Rect {
       && (this.y + this.height > point.y()); 
   }
   
-  static public boolean intersect(Rect biggest, Rect smallest) {
-	  boolean result = false;
-	  if (biggest.contains(smallest.topLeftCorner())) {
-		 result = true;
-	  } else if (biggest.contains(smallest.topRightCorner())) {
-		  result = true;
-	  } else if (biggest.contains(smallest.bottomLeftCorner())) {
-		  result = true;
-	  } else if (biggest.contains(smallest.bottomRightCorner())) {
-		  result = true;
-	  }
-	  return result;
-  }
-  
   public boolean intersectTop(Rect other) {
 	  return (other.y < y && (
 		other.contains(topLeftCorner())
@@ -80,10 +66,6 @@ public class Rect {
 	  return other.intersectLeft(this);
   }
 
-  public boolean intersect(Rect other) {
-	  return intersect(this, other) || intersect(other, this);
-  }
-  
   public void reset(int x, int y, int width, int height) {
 	  this.x = x;
 	  this.y = y;
