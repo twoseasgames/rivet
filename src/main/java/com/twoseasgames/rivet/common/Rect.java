@@ -24,6 +24,10 @@ public class Rect {
 	  this.height = size.height();
   }
   
+  public static Rect createCenteredHitbox(int width, int height) {
+	  return new Rect(-width / 2, -height / 2, width, height);
+  }
+  
   public boolean contains(Rect other) {
       return (this.x <= other.x()) 
         && (this.y <= other.y()) 
