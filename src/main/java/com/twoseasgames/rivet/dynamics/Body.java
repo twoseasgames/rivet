@@ -88,24 +88,24 @@ public class Body {
 		if (dynamic == true) {
 			Acceleration acceleration = Acceleration.sum(accelerations);
 			velocity = acceleration.step(velocity, delta);
-			for (Body body : bodies) {
-				if(body.id != id && body.hitbox != null) {
-					if(hitbox.intersectTop(body.hitbox) && velocity.y() < 0) {
-						if(listener == null || listener.onCollideTop(body)) {
-							velocity.setY(0);
-						}
-					} else if(hitbox.intersectBottom(body.hitbox) && velocity.y() > 0) {
-						if(listener == null || listener.onCollideBottom(body)) {
-							velocity.setY(0);
-						}
-					} else if(hitbox.intersectLeft(body.hitbox) && velocity.x() < 0) {
-						if(listener == null || listener.onCollideLeft(body)) {
-							velocity.setX(0);
-						}
-					} else if(hitbox.intersectRight(body.hitbox) && velocity.x() > 0) {
-						if(listener == null || listener.onCollideRight(body)) {
-							velocity.setX(0);
-						}
+		}
+		for (Body body : bodies) {
+			if(body.id != id && body.hitbox != null) {
+				if(hitbox.intersectTop(body.hitbox) && velocity.y() < 0) {
+					if(listener == null || listener.onCollideTop(body)) {
+						velocity.setY(0);
+					}
+				} else if(hitbox.intersectBottom(body.hitbox) && velocity.y() > 0) {
+					if(listener == null || listener.onCollideBottom(body)) {
+						velocity.setY(0);
+					}
+				} else if(hitbox.intersectLeft(body.hitbox) && velocity.x() < 0) {
+					if(listener == null || listener.onCollideLeft(body)) {
+						velocity.setX(0);
+					}
+				} else if(hitbox.intersectRight(body.hitbox) && velocity.x() > 0) {
+					if(listener == null || listener.onCollideRight(body)) {
+						velocity.setX(0);
 					}
 				}
 			}
