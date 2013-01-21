@@ -94,18 +94,22 @@ public class Body {
 				if(hitbox.intersectTop(body.hitbox) && velocity.y() < 0) {
 					if(listener == null || listener.onCollideTop(body)) {
 						velocity.setY(0);
+						pos.setY(body.hitbox.y() + body.hitbox.height());
 					}
 				} else if(hitbox.intersectBottom(body.hitbox) && velocity.y() > 0) {
 					if(listener == null || listener.onCollideBottom(body)) {
 						velocity.setY(0);
+						pos.setY(body.hitbox.y() - hitbox.height() / 2);
 					}
 				} else if(hitbox.intersectLeft(body.hitbox) && velocity.x() < 0) {
 					if(listener == null || listener.onCollideLeft(body)) {
 						velocity.setX(0);
+						pos.setX(body.hitbox.x() + body.hitbox.width());
 					}
 				} else if(hitbox.intersectRight(body.hitbox) && velocity.x() > 0) {
 					if(listener == null || listener.onCollideRight(body)) {
 						velocity.setX(0);
+						pos.setX(body.hitbox.x() - hitbox.width() / 2);
 					}
 				}
 			}
