@@ -31,6 +31,7 @@ public class Body {
 	private int id;
 	private Rect hitboxSpecs;
 	private Object userData = NO_DATA;
+	private boolean enable = true;
 	
 	public Body(Point pos) {
 		id = count;
@@ -56,6 +57,14 @@ public class Body {
 		this.velocity = new Velocity(0, 0);
 	}
 
+	public boolean isEnable() {
+		return enable;
+	}
+	
+	public void disable() {
+		this.enable = false;
+	}
+	
 	public void setUserData(Object userData) {
 		this.userData = userData;
 	}
@@ -89,24 +98,28 @@ public class Body {
 			Acceleration acceleration = Acceleration.sum(accelerations);
 			velocity = acceleration.step(velocity, delta);
 		}
+		Point nextPos  = velocity.step(pos, delta);
+		Rect nextHitbox = hitbox.copy();
+		nextHitbox.setX(nextPos.x() + hitboxSpecs.x());
+		nextHitbox.setY(nextPos.y() + hitboxSpecs.y());
 		for (Body body : bodies) {
 			if(body.id != id && body.hitbox != null) {
-				if(hitbox.intersectTop(body.hitbox) && velocity.y() < 0) {
+				if(nextHitbox.intersectTop(body.hitbox) && velocity.y() < 0) {
 					if(listener == null || listener.onCollideTop(body)) {
 						velocity.setY(0);
 						pos.setY(body.hitbox.y() + body.hitbox.height());
 					}
-				} else if(hitbox.intersectBottom(body.hitbox) && velocity.y() > 0) {
+				} else if(nextHitbox.intersectBottom(body.hitbox) && velocity.y() > 0) {
 					if(listener == null || listener.onCollideBottom(body)) {
 						velocity.setY(0);
 						pos.setY(body.hitbox.y() - hitbox.height() / 2);
 					}
-				} else if(hitbox.intersectLeft(body.hitbox) && velocity.x() < 0) {
+				} else if(nextHitbox.intersectLeft(body.hitbox) && velocity.x() < 0) {
 					if(listener == null || listener.onCollideLeft(body)) {
 						velocity.setX(0);
 						pos.setX(body.hitbox.x() + body.hitbox.width());
 					}
-				} else if(hitbox.intersectRight(body.hitbox) && velocity.x() > 0) {
+				} else if(nextHitbox.intersectRight(body.hitbox) && velocity.x() > 0) {
 					if(listener == null || listener.onCollideRight(body)) {
 						velocity.setX(0);
 						pos.setX(body.hitbox.x() - hitbox.width() / 2);

@@ -31,8 +31,15 @@ public class World {
 	}
 	
 	public void step (float delta) {
+		List<Body> toDelete = new ArrayList<Body>();
 		for (Body body : bodies) {
 			body.step(delta, bodies);
+			if (body.isEnable() == false) {
+				toDelete.add(body);
+			}
+		}
+		for (Body body : toDelete) {
+			bodies.remove(body);
 		}
 	}
 }
