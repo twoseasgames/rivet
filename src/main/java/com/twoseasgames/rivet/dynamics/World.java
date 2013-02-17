@@ -42,4 +42,8 @@ public class World {
 			bodies.remove(body);
 		}
 	}
+	
+	public int count() {
+		return bodies.size();
+	}
 }
