@@ -10,8 +10,9 @@ import com.twoseasgames.rivet.common.Velocity;
 
 public class Body {
 
-	private static int count = 0;
 	public static final Object NO_DATA = new Object();
+
+	private static int count = 0;
 	
 	public interface Listener {
 		
@@ -19,7 +20,6 @@ public class Body {
 		public boolean onCollideRight(Body other);
 		public boolean onCollideBottom(Body other);
 		public boolean onCollideLeft(Body other);
-		
 	}
 
 	private Rect hitbox = null;
@@ -102,27 +102,30 @@ public class Body {
 		Rect nextHitbox = hitbox.copy();
 		nextHitbox.setX(nextPos.x() + hitboxSpecs.x());
 		nextHitbox.setY(nextPos.y() + hitboxSpecs.y());
-		for (Body body : bodies) {
-			if(body.id != id && body.hitbox != null) {
-				if(nextHitbox.intersectTop(body.hitbox) && velocity.y() < 0) {
-					if(listener == null || listener.onCollideTop(body)) {
-						velocity.setY(0);
-						pos.setY(body.hitbox.y() + body.hitbox.height());
-					}
-				} else if(nextHitbox.intersectBottom(body.hitbox) && velocity.y() > 0) {
-					if(listener == null || listener.onCollideBottom(body)) {
-						velocity.setY(0);
-						pos.setY(body.hitbox.y() - hitbox.height() / 2);
-					}
-				} else if(nextHitbox.intersectLeft(body.hitbox) && velocity.x() < 0) {
-					if(listener == null || listener.onCollideLeft(body)) {
-						velocity.setX(0);
-						pos.setX(body.hitbox.x() + body.hitbox.width());
-					}
-				} else if(nextHitbox.intersectRight(body.hitbox) && velocity.x() > 0) {
-					if(listener == null || listener.onCollideRight(body)) {
-						velocity.setX(0);
-						pos.setX(body.hitbox.x() - hitbox.width() / 2);
+		if (velocity.x() != 0 || velocity.y() != 0) {
+			for (Body body : bodies) {
+				if(body.id != id && body.hitbox != null 
+						&& Math.abs(nextHitbox.x() - body.hitbox.x()) <= nextHitbox.width() + body.hitbox.width()) {
+					if(velocity.y() < 0 && nextHitbox.intersectTop(body.hitbox)) {
+						if(listener == null || listener.onCollideTop(body)) {
+							velocity.setY(0);
+							pos.setY(body.hitbox.y() + body.hitbox.height());
+						}
+					} else if(velocity.y() > 0 && nextHitbox.intersectBottom(body.hitbox)) {
+						if(listener == null || listener.onCollideBottom(body)) {
+							velocity.setY(0);
+							pos.setY(body.hitbox.y() - hitbox.height() / 2);
+						}
+					} else if(velocity.x() < 0 && nextHitbox.intersectLeft(body.hitbox)) {
+						if(listener == null || listener.onCollideLeft(body)) {
+							velocity.setX(0);
+							pos.setX(body.hitbox.x() + body.hitbox.width());
+						}
+					} else if(velocity.x() > 0 && nextHitbox.intersectRight(body.hitbox)) {
+						if(listener == null || listener.onCollideRight(body)) {
+							velocity.setX(0);
+							pos.setX(body.hitbox.x() - hitbox.width() / 2);
+						}
 					}
 				}
 			}
