@@ -57,6 +57,10 @@ public class Body {
 		this.velocity = new Velocity(0, 0);
 	}
 
+	public void setDynamic(boolean dynamic) {
+		this.dynamic = dynamic;
+	}
+	
 	public boolean isEnable() {
 		return enable;
 	}
@@ -105,7 +109,8 @@ public class Body {
 		if (velocity.x() != 0 || velocity.y() != 0) {
 			for (Body body : bodies) {
 				if(body.id != id && body.hitbox != null 
-						&& Math.abs(nextHitbox.x() - body.hitbox.x()) <= nextHitbox.width() + body.hitbox.width()) {
+						&& Math.abs(nextHitbox.x() - body.hitbox.x()) <= nextHitbox.width() + body.hitbox.width()
+						&& Math.abs(nextHitbox.y() - body.hitbox.y()) <= nextHitbox.height() + body.hitbox.height()) {
 					if(velocity.y() < 0 && nextHitbox.intersectTop(body.hitbox)) {
 						if(listener == null || listener.onCollideTop(body)) {
 							velocity.setY(0);
