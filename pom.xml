@@ -12,7 +12,7 @@
   <groupId>com.twoseasgames</groupId>
 
 
-  <version>1.0</version>
+  <version>1.1-SNAPSHOT</version>
 
   <artifactId>rivet</artifactId>
   <packaging>jar</packaging>
